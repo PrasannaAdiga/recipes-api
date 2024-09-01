@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -33,8 +35,18 @@ func NewReceipeHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, receipe)
 }
 
+func ListReceipesHandler(c *gin.Context) {
+	c.JSON(http.StatusOK, receipes)
+}
+
+func init() {
+	file, _ := os.ReadFile("receipes.json")
+	json.Unmarshal([]byte(file), &receipes)
+}
+
 func main() {
 	router := gin.Default()
-	router.POST("/receipe", NewReceipeHandler)
+	router.POST("/receipes", NewReceipeHandler)
+	router.GET("/receipes", ListReceipesHandler)
 	router.Run()
 }
